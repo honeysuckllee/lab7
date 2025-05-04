@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2025-05-04T16:53:42.473003800Z</date>
+  <millis>1746377622473</millis>
+  <nanos>3800</nanos>
+  <sequence>0</sequence>
+  <logger>Server</logger>
+  <level>INFO</level>
+  <class>ru.lab7.ServerApp</class>
+  <method>run</method>
+  <thread>1</thread>
+  <message>Сервер начал работу.</message>
+</record>
+<record>
+  <date>2025-05-04T16:53:49.084850600Z</date>
+  <millis>1746377629084</millis>
+  <nanos>850600</nanos>
+  <sequence>1</sequence>
+  <logger>Server</logger>
+  <level>INFO</level>
+  <class>ru.lab7.ServerApp</class>
+  <method>run</method>
+  <thread>1</thread>
+  <message>Подключился новый клиент: /127.0.0.1:59386</message>
+</record>
+</log>

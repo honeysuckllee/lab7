@@ -1,0 +1,4 @@
+show
+remove_lower
+3
+show
