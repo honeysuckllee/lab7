@@ -10,6 +10,8 @@ import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import static ru.lab7.Service.Utilites.getValidInt;
 import static ru.lab7.Service.Utilites.integerConverter;
@@ -30,17 +32,16 @@ public class RemoveLower extends Command {
         else {
             id = integerConverter(request.getArg());
         }
-        if (id != null)
-        {
-            if (!deque.getDeque().isEmpty()) {
-                int counterDell = deque.removeLower(id);
-                return new Response("Удалено " + counterDell + " элементов" + "\n", true);
+        try {
+            List<Integer> removeIds = RouteCollection.idToRemove(id);
+            for (Integer removeId : removeIds){
+                routeHandler.remove(removeId);
+                collection.removeRoute(removeId);
             }
-            return new Response("Коллекция пуста" + "\n", true);
         }
-        else
-        {
-            return new Response("Неверный формат команды \n", true);
+        catch (SQLException e){
+            return new Response( "Ошибка при удалении\n");
         }
+        return new Response("Элементы успешно удалены ", true);
     }
 }

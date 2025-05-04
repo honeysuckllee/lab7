@@ -8,6 +8,7 @@ import ru.lab7.ResponseWriter;
 import ru.lab7.DataBase.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public abstract class Command {
     RouteCollection collection;
@@ -21,6 +22,6 @@ public abstract class Command {
     }
 
     public abstract Response execute(Request request, RequestReader requestReader,
-                                     ResponseWriter responseWriter) throws IOException, ClassNotFoundException;
+                                     ResponseWriter responseWriter) throws IOException, ClassNotFoundException, SQLException;
 
 }

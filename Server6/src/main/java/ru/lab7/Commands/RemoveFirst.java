@@ -10,16 +10,13 @@ import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Класс `RemoveFirst` реализует интерфейс `Command` и представляет команду удаления первого элемента из коллекции.
  * При выполнении команды удаляется первый элемент коллекции.
  */
 public class RemoveFirst extends Command {
-    /**
-     * Коллекция `Deque`, из которой удаляется первый элемент.
-     */
-    private Deque deque;
 
     /**
      * Конструктор класса `RemoveFirst`.
@@ -34,15 +31,14 @@ public class RemoveFirst extends Command {
      */
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
-        StringBuilder rez = new StringBuilder("\n");
-
-        if (deque.removeFirst()){
-            rez.append("Успешно удален первый элемент").append("\n");
+    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException, SQLException {
+        try {
+            routeHandler.remove(collection.getMinId());
+            collection.removeRoute(collection.getMinId());
+            return new Response("Успешно удален первый элемент", true);
         }
-        else{
-            rez.append("Коллекция пуста").append("\n");
+        catch(SQLException e){
+            return new Response( "Ошибка при удалении\n");
         }
-        return new Response(rez.toString(), true);
     }
 }

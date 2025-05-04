@@ -2,16 +2,14 @@ package ru.lab7.Commands;
 
 import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
-import ru.lab7.Model.Coordinates;
-import ru.lab7.Model.Deque;
-import ru.lab7.Model.Location;
-import ru.lab7.Model.RouteCollection;
+import ru.lab7.Model.*;
 import ru.lab7.Requests.Request;
 import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import static ru.lab7.Service.Utilites.*;
@@ -46,11 +44,6 @@ public class Add extends Command {
      */
     private Float distance;
     /**
-     * Коллекция `Deque`, в которую добавляется маршрут.
-     */
-    private Deque deque;
-
-    /**
      * Конструктор класса `Add`.
      *
      */
@@ -64,12 +57,16 @@ public class Add extends Command {
      */
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException, SQLException {
+
+        if (!usersHandler.checkUser(request.getLogin(), request.getPassword())){
+            return new Response("Пользователь не авторизован.\n");
+        }
+
         // id
-        //int id = route.getId();
+        int id = collection.getMaxId() + 1;
 
         //  name
-
         if (!request.getArg().isEmpty()){
             this.name = request.getArg();
         }else{
@@ -91,7 +88,13 @@ public class Add extends Command {
         //  distance
         this.distance = getValidFloatDistance(request.isScript(), requestReader, responseWriter);
 
-        deque.addRoute(name, coordinates, creationDate, from, to, distance);
+        try {
+            routeHandler.add(new Route(id, name, coordinates, creationDate, from, to, distance));
+            collection.addRoute(id, name, coordinates, creationDate, from, to, distance);
+        }
+        catch(SQLException e){
+            return new Response( "Ошибка при добавлении в базу данных\n");
+        }
 
         return new Response("Маршрут добавлен" + "\n", true);
 

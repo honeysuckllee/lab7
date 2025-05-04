@@ -3,6 +3,7 @@ package ru.lab7.DataBase;
 import ru.lab7.Model.Coordinates;
 import ru.lab7.Model.Location;
 import ru.lab7.Model.Route;
+import ru.lab7.Response;
 
 import java.sql.Connection;
 import java.util.HashSet;
@@ -136,7 +137,7 @@ public class DBRouteHandler {
             connection.setAutoCommit(true); // Возвращаем авто-коммит
         }
     }
-    public void update(int id, Route route) throws SQLException {
+    public void update(Route route) throws SQLException {
         // Запросы для обновления
         String updateRouteQuery = """
         UPDATE routes
@@ -207,13 +208,13 @@ public class DBRouteHandler {
             } else {
                 routeStmt.setNull(2, java.sql.Types.FLOAT);
             }
-            routeStmt.setInt(3, id);
+            routeStmt.setInt(3, route.getId());
             routeStmt.executeUpdate();
 
             // Обновляем координаты
             coordStmt.setDouble(1, route.getCoordinates().getX());
             coordStmt.setFloat(2, route.getCoordinates().getY());
-            coordStmt.setInt(3, id);
+            coordStmt.setInt(3, route.getId());
             coordStmt.executeUpdate();
 
             // Обрабатываем from location
@@ -222,7 +223,7 @@ public class DBRouteHandler {
                 boolean hasFromLocation = false;
                 try (PreparedStatement checkStmt = connection.prepareStatement(
                         "SELECT from_id FROM routes WHERE id = ?")) {
-                    checkStmt.setInt(1, id);
+                    checkStmt.setInt(1, route.getId());
                     try (ResultSet rs = checkStmt.executeQuery()) {
                         if (rs.next()) {
                             hasFromLocation = !rs.wasNull();
@@ -235,7 +236,7 @@ public class DBRouteHandler {
                     updateFromStmt.setInt(1, route.getFrom().getX());
                     updateFromStmt.setFloat(2, route.getFrom().getY());
                     updateFromStmt.setInt(3, route.getFrom().getZ());
-                    updateFromStmt.setInt(4, id);
+                    updateFromStmt.setInt(4, route.getId());
                     updateFromStmt.executeUpdate();
                 } else {
                     // Создаем новую локацию
@@ -246,7 +247,7 @@ public class DBRouteHandler {
                         if (rs.next()) {
                             int newFromId = rs.getInt(1);
                             setFromStmt.setInt(1, newFromId);
-                            setFromStmt.setInt(2, id);
+                            setFromStmt.setInt(2, route.getId());
                             setFromStmt.executeUpdate();
                         }
                     }
@@ -254,7 +255,7 @@ public class DBRouteHandler {
             } else {
                 // Удаляем ссылку на from location
                 setFromStmt.setNull(1, java.sql.Types.INTEGER);
-                setFromStmt.setInt(2, id);
+                setFromStmt.setInt(2, route.getId());
                 setFromStmt.executeUpdate();
             }
 
@@ -263,7 +264,7 @@ public class DBRouteHandler {
                 boolean hasToLocation = false;
                 try (PreparedStatement checkStmt = connection.prepareStatement(
                         "SELECT to_id FROM routes WHERE id = ?")) {
-                    checkStmt.setInt(1, id);
+                    checkStmt.setInt(1, route.getId());
                     try (ResultSet rs = checkStmt.executeQuery()) {
                         if (rs.next()) {
                             hasToLocation = !rs.wasNull();
@@ -275,7 +276,7 @@ public class DBRouteHandler {
                     updateToStmt.setInt(1, route.getTo().getX());
                     updateToStmt.setFloat(2, route.getTo().getY());
                     updateToStmt.setInt(3, route.getTo().getZ());
-                    updateToStmt.setInt(4, id);
+                    updateToStmt.setInt(4, route.getId());
                     updateToStmt.executeUpdate();
                 } else {
                     insertToStmt.setInt(1, route.getTo().getX());
@@ -285,14 +286,14 @@ public class DBRouteHandler {
                         if (rs.next()) {
                             int newToId = rs.getInt(1);
                             setToStmt.setInt(1, newToId);
-                            setToStmt.setInt(2, id);
+                            setToStmt.setInt(2, route.getId());
                             setToStmt.executeUpdate();
                         }
                     }
                 }
             } else {
                 setToStmt.setNull(1, java.sql.Types.INTEGER);
-                setToStmt.setInt(2, id);
+                setToStmt.setInt(2, route.getId());
                 setToStmt.executeUpdate();
             }
 

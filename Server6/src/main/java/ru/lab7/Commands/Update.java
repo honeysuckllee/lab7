@@ -2,16 +2,14 @@ package ru.lab7.Commands;
 
 import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
-import ru.lab7.Model.Coordinates;
-import ru.lab7.Model.Deque;
-import ru.lab7.Model.Location;
-import ru.lab7.Model.RouteCollection;
+import ru.lab7.Model.*;
 import ru.lab7.Requests.Request;
 import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import static ru.lab7.Service.Utilites.*;
@@ -59,9 +57,16 @@ public class Update extends Command {
         //  distance
         this.distance = getValidFloatDistance(request.isScript(), requestReader, responseWriter);
 
-        deque.updateRoute(id, name, coordinates, creationDate, from, to, distance);
+        try {
+            routeHandler.update(new Route(id, name, coordinates, creationDate, from, to, distance));
+            collection.addRoute(id, name, coordinates, creationDate, from, to, distance);
+        }
+        catch(SQLException e){
+            return new Response( "Ошибка при обновлении\n");
+        }
+
+        //deque.updateRoute(id, name, coordinates, creationDate, from, to, distance);
 
         return new Response("Маршрут обновлен" + "\n", true);
-
     }
 }

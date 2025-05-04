@@ -2,16 +2,14 @@ package ru.lab7.Commands;
 
 import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
-import ru.lab7.Model.Coordinates;
-import ru.lab7.Model.Deque;
-import ru.lab7.Model.Location;
-import ru.lab7.Model.RouteCollection;
+import ru.lab7.Model.*;
 import ru.lab7.Requests.Request;
 import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 import static ru.lab7.Service.Utilites.*;
@@ -56,8 +54,6 @@ public class AddIfMax extends Command {
 
     /**
      * Конструктор класса `AddIfMax`.
-     *
-     * @param deque   Коллекция `Deque`, в которую добавляется маршрут.
      */
     public AddIfMax(RouteCollection routeCollection, DBUsersHandler usersHandler, DBRouteHandler routeHandler) {
         super(routeCollection, usersHandler, routeHandler);
@@ -70,15 +66,14 @@ public class AddIfMax extends Command {
      */
     public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         id = null;
-        if (!request.getArg().isEmpty()){
+        if (!request.getArg().isEmpty()) {
             id = integerConverter(request.getArg());
         }
-        if (id == null)
-        {
+        if (id == null) {
             id = getValidInt(request.isScript(), requestReader, responseWriter, "Введите id : ");
         }
 
-        if (id > deque.getMaxId()) {
+        if (id > collection.getMaxId()) {
             //  name
             this.name = getValidName(request.isScript(), requestReader, responseWriter);
 
@@ -100,9 +95,14 @@ public class AddIfMax extends Command {
 
             deque.addRoute(id, name, coordinates, creationDate, from, to, distance);
 
-            return new Response("Маршрут добавлен\n", true);
-        }
-        else{
+            try {
+                routeHandler.add(new Route(id, name, coordinates, creationDate, from, to, distance));
+                collection.addRoute(id, name, coordinates, creationDate, from, to, distance);
+            } catch (SQLException e) {
+                return new Response("Ошибка при добавлении в базу данных\n", true);
+            }
+            return new Response("Маршрут добавлен" + "\n", true);
+        } else {
             return new Response("Введенное значение меньше максимального id коллекции\n ", true);
         }
     }

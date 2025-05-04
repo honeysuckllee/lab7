@@ -2,6 +2,7 @@ package ru.lab7.Model;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,6 +41,58 @@ public class RouteCollection {
     public String getType(){
         return routes.getClass().getSimpleName();
     }
+
+    public int getMaxId() {
+        int maxId = 0;
+        for (Route route : routes) {
+            if (route.getId() > maxId) {
+                maxId = route.getId();
+            }
+        }
+        return maxId;
+    }
+
+    public int getMinId() {
+        int minId = getMaxId();
+        for (Route route : routes) {
+            if (route.getId() < minId) {
+                minId = route.getId();
+            }
+        }
+        return minId;
+    }
+
+    public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance){
+        new Route(id, name, coordinates, creationDate, from, to, distance);
+    }
+
+    public void removeRoute(int id) {
+        Route toRemove = null;
+        synchronized(routes) {
+            for(Route route : routes) {
+                if(route.getId() == id) {
+                    toRemove = route;
+                    break;
+                }
+            }
+            if(toRemove != null) {
+                 routes.remove(toRemove);
+            }
+        }
+    }
+
+    public static List<Integer> idToRemove(int maxId) {
+        List<Integer> result = new ArrayList<>();
+        for (Route route : routes) {
+            int id = route.getId();
+            if (id < maxId) {
+                result.add(id);
+            }
+        }
+        return result;
+    }
+
+
 
     /**
      * Выводит в консоль уникальные значения расстояний (`distance`) для всех объектов `Route` в коллекции.

@@ -32,7 +32,7 @@ public class DBUsersHandler{
         }
     }
 
-    public boolean authenticate(String username, String password) throws SQLException {
+    public boolean checkUser(String username, String password) throws SQLException {
         String query = "SELECT password FROM users WHERE username = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, username);

@@ -10,6 +10,7 @@ import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static ru.lab7.Service.Utilites.getValidInt;
 import static ru.lab7.Service.Utilites.integerConverter;
@@ -50,16 +51,13 @@ public class RemoveById extends Command {
         else {
             id = integerConverter(request.getArg());
         }
-        if (id != null)
-        {
-            boolean dell = deque.removeById(id);
-            if (dell) {
-                return new Response("Элемент удален\n", true);
-            }
-            return new Response("Элемент не может быть удален\n", true);
+        try {
+            routeHandler.remove(id);
+            collection.removeRoute(id);
+            return new Response("Элемент успешно удален ", true);
         }
-        else {
-            return new Response("Неверный формат команды \n", true);
+        catch(SQLException e){
+            return new Response( "Ошибка при удалении\n");
         }
     }
 }
