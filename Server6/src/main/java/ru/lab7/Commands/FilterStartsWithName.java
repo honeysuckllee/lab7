@@ -5,11 +5,11 @@ import ru.lab7.DataBase.DBUsersHandler;
 import ru.lab7.Model.Deque;
 import ru.lab7.Model.RouteCollection;
 import ru.lab7.Requests.Request;
-import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import static ru.lab7.Service.Utilites.*;
 
@@ -42,7 +42,7 @@ public class FilterStartsWithName extends Command {
      */
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter)
+    public Response execute(Request request, ObjectInputStream requestReader, ResponseWriter responseWriter)
                             throws IOException, ClassNotFoundException
     {
         if (request.getArg().isEmpty()){

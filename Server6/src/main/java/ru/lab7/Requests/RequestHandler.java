@@ -107,9 +107,8 @@ public class RequestHandler {
                             responseWriter.sendResponse("Команда не найдена", true);
                         }
                         else {
-                            String responseStr = commandHashMap.get(command.getCommand()).execute(command, requestReader,
-                                    responseWriter
-                            ).getResponseInfo();
+                            String responseStr = commandHashMap.get(command.getCommand()).execute(command,
+                                                                    in, responseWriter).getResponseInfo();
 
                             try {
                                 responseWriter.sendResponse(responseStr);

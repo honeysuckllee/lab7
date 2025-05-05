@@ -107,9 +107,9 @@ public class Deque {
      * @param to            Конечная локация маршрута.
      * @param distance      Расстояние маршрута.
      */
-    public void addRoute(String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance) {
+    public void addRoute(String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance, int userId) {
         maxId += 1;
-        Route route = new Route(maxId, name, coordinates, creationDate, from, to, distance);
+        Route route = new Route(maxId, name, coordinates, creationDate, from, to, distance, userId);
         routes.add(route);
     }
 
@@ -142,7 +142,8 @@ public class Deque {
      * @param to            Новая конечная локация маршрута.
      * @param distance      Новое расстояние маршрута.
      */
-    public String updateRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance){
+    public String updateRoute(int id, String name, Coordinates coordinates, LocalDate creationDate,
+                              Location from, Location to, Float distance,int userId){
         StringBuilder rez = new StringBuilder();
         boolean flag = false;
         for (Route route : routes) {
@@ -153,6 +154,7 @@ public class Deque {
                 route.setFrom(from);
                 route.setTo(to);
                 route.setDistance(distance);
+                route.setUserId(userId);
                 flag = true;
                 rez.append("Элемент обновлен\n");
                 break;
@@ -160,7 +162,7 @@ public class Deque {
         }
         if (!flag){
             rez.append("Элемент для update не найден\nЭлемент добавлен в коллекцию\n");
-            Route route = new Route(id, name, coordinates, creationDate, from, to, distance);
+            Route route = new Route(id, name, coordinates, creationDate, from, to, distance, userId);
             routes.add(route);
             if (maxId < id){
                 maxId = id;
@@ -193,8 +195,8 @@ public class Deque {
      * @param to            Конечная локация маршрута.
      * @param distance      Расстояние маршрута.
      */
-    public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance) {
-        Route route = new Route(id, name, coordinates, creationDate, from, to, distance);
+    public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance,int userId) {
+        Route route = new Route(id, name, coordinates, creationDate, from, to, distance, userId);
         routes.add(route);
         if (id > maxId){
             maxId = id;

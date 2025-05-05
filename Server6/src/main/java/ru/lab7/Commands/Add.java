@@ -4,11 +4,11 @@ import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
 import ru.lab7.Model.*;
 import ru.lab7.Requests.Request;
-import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -57,7 +57,7 @@ public class Add extends Command {
      */
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException, SQLException {
+    public Response execute(Request request, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException, SQLException {
 
         if (!usersHandler.checkUser(request.getLogin(), request.getPassword())){
             return new Response("Пользователь не авторизован.\n");
@@ -88,9 +88,11 @@ public class Add extends Command {
         //  distance
         this.distance = getValidFloatDistance(request.isScript(), requestReader, responseWriter);
 
+
         try {
-            routeHandler.add(new Route(id, name, coordinates, creationDate, from, to, distance));
-            collection.addRoute(id, name, coordinates, creationDate, from, to, distance);
+            int userId = usersHandler.getUserId(request.getLogin(), request.getPassword());
+            routeHandler.add(new Route(id, name, coordinates, creationDate, from, to, distance, userId));
+            collection.addRoute(id, name, coordinates, creationDate, from, to, distance, userId);
         }
         catch(SQLException e){
             return new Response( "Ошибка при добавлении в базу данных\n");

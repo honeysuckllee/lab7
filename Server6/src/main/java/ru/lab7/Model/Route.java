@@ -54,6 +54,10 @@ public class Route implements  Comparable<Route>, Serializable {
      * Поле может быть null, значение должно быть больше 1.
      */
     private Float distance;
+    /**
+     * id пользователя
+     */
+    private int userId;
 
     /**
      * Конструктор для создания объекта маршрута.
@@ -67,7 +71,7 @@ public class Route implements  Comparable<Route>, Serializable {
      * @param distance     Расстояние маршрута.
      */
     public Route(int id, String name, Coordinates coordinates, LocalDate creationDate,
-                 Location from, Location to, Float distance) {
+                 Location from, Location to, Float distance, int userId) {
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -75,6 +79,7 @@ public class Route implements  Comparable<Route>, Serializable {
         this.from = from;
         this.to = to;
         this.distance = distance;
+        this.userId = userId;
     }
     public Float getDistance(){
         if (this.distance == null){
@@ -114,6 +119,7 @@ public class Route implements  Comparable<Route>, Serializable {
         } else {
             out += ", distance=" + distance;
         }
+        out += ", userId=" + userId;
         out += '}';
         return out;
     }

@@ -5,11 +5,11 @@ import ru.lab7.DataBase.DBUsersHandler;
 import ru.lab7.Model.Deque;
 import ru.lab7.Model.RouteCollection;
 import ru.lab7.Requests.Request;
-import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.SQLException;
 
 import static ru.lab7.Service.Utilites.getValidInt;
@@ -44,20 +44,27 @@ public class RemoveById extends Command {
      */
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public Response execute(Request request, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         if (request.getArg().isEmpty()){
             id = getValidInt( request.isScript(),  requestReader, responseWriter, "Введите id:");
         }
         else {
             id = integerConverter(request.getArg());
         }
+
+
         try {
-            routeHandler.remove(id);
-            collection.removeRoute(id);
-            return new Response("Элемент успешно удален ", true);
+            int userId = usersHandler.getUserId(request.getLogin(), request.getPassword());
+            if (routeHandler.isRouteOwnedByUser(id, userId)) {
+                routeHandler.remove(id);
+                collection.removeRoute(id);
+                return new Response("Элемент успешно удален ", true);
+            } else {
+                return new Response("Ошибка при удалении. Элемент не принадлежит пользователю.", true);
+            }
         }
         catch(SQLException e){
-            return new Response( "Ошибка при удалении\n");
+            return new Response( "Ошибка при удалении\n", true);
         }
     }
 }

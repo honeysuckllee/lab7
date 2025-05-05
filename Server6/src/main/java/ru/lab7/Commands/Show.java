@@ -2,13 +2,13 @@ package ru.lab7.Commands;
 
 import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
-import ru.lab7.Model.Deque;
 import ru.lab7.Model.Route;
 import ru.lab7.Model.RouteCollection;
 import ru.lab7.Requests.Request;
-import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
+
+import java.io.ObjectInputStream;
 
 public class Show extends Command {
 
@@ -17,7 +17,7 @@ public class Show extends Command {
     }
 
     @Override
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) {
+    public Response execute(Request request, ObjectInputStream requestReader, ResponseWriter responseWriter) {
         StringBuilder rez = new StringBuilder("Коллекция:\n");
         if (collection.getLength() > 0) {
             for (Route route : collection.sortedRoute()) {

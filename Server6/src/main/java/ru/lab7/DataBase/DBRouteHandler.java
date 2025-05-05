@@ -55,8 +55,8 @@ public class DBRouteHandler {
 
         // Вставка маршрута
         String insertRouteSQL = """
-        INSERT INTO routes (name, coordinates_id, creation_date, from_id, to_id, distance)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO routes (name, coordinates_id, creation_date, from_id, to_id, distance, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """;
         try (PreparedStatement ps = connection.prepareStatement(insertRouteSQL)) {
             ps.setString(1, route.getName());
@@ -65,6 +65,7 @@ public class DBRouteHandler {
             ps.setObject(4, fromId);
             ps.setObject(5, toId);
             ps.setObject(6, route.getDistance());
+            ps.setInt(7, route.getUserId());
             ps.executeUpdate();
         }
     }
@@ -308,7 +309,7 @@ public class DBRouteHandler {
     public HashSet<Route> load() throws SQLException {
         HashSet<Route> routes = new HashSet<>();
         String query = """
-        SELECT r.id, r.name, r.creation_date, r.distance,
+        SELECT r.id, r.name, r.creation_date, r.distance, r.user_id,
                c.x AS coord_x, c.y AS coord_y,
                f.x AS from_x, f.y AS from_y, f.z AS from_z,
                t.x AS to_x, t.y AS to_y, t.z AS to_z
@@ -325,7 +326,7 @@ public class DBRouteHandler {
                 // Создаем объект Coordinates
                 Coordinates coordinates = new Coordinates(
                         rs.getDouble("coord_x"),
-                        rs.getFloat("coord_y")  // Используем getFloat для y
+                        rs.getFloat("coord_y")
                 );
 
                 // Создаем объект Location для from (может быть null)
@@ -333,7 +334,7 @@ public class DBRouteHandler {
                 if (rs.getObject("from_x") != null) {
                     from = new Location(
                             rs.getInt("from_x"),
-                            rs.getFloat("from_y"),  // Используем getFloat для y
+                            rs.getFloat("from_y"),
                             rs.getInt("from_z")
                     );
                 }
@@ -343,7 +344,7 @@ public class DBRouteHandler {
                 if (rs.getObject("to_x") != null) {
                     to = new Location(
                             rs.getInt("to_x"),
-                            rs.getFloat("to_y"),  // Используем getFloat для y
+                            rs.getFloat("to_y"),
                             rs.getInt("to_z")
                     );
                 }
@@ -356,7 +357,8 @@ public class DBRouteHandler {
                         rs.getDate("creation_date").toLocalDate(),
                         from,
                         to,
-                        (Float) rs.getObject("distance")  // может быть null
+                        (Float) rs.getObject("distance"),
+                        rs.getInt("user_id")
                 );
 
                 routes.add(route);
@@ -364,5 +366,21 @@ public class DBRouteHandler {
         }
 
         return routes;
+    }
+    public boolean isRouteOwnedByUser(int routeId, int userId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM routes WHERE id = ? AND user_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, routeId);
+            ps.setInt(2, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;  // Если count > 0, значит маршрут принадлежит пользователю
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -96,7 +96,7 @@ public class Utilites {
      *
      * @return Введенное пользователем корректное имя.
      */
-    public static String getValidName(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public static String getValidName(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         String name = "";
         boolean isValid = false;
 
@@ -107,7 +107,7 @@ public class Utilites {
             }else{
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
             name = request.getCommand().trim();
 
             if (name.isEmpty()) {
@@ -137,7 +137,7 @@ public class Utilites {
      * @param promt   Приглашение для ввода.
      * @return Введенное пользователем целое число.
      */
-    public static int getValidInt(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
+    public static int getValidInt(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
         int value = 0;
         boolean isValid = false;
 
@@ -149,7 +149,7 @@ public class Utilites {
             else {
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
 
             if (request.getCommand() != null ) {
                 Integer tryValue = integerConverter(request.getCommand().trim());
@@ -169,7 +169,7 @@ public class Utilites {
      *
      * @return Введенное пользователем число типа double.
      */
-    public static double getValidDouble(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public static double getValidDouble(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         double value = 0.0;
         boolean isValid = false;
 
@@ -180,7 +180,7 @@ public class Utilites {
             else {
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
             if (request.getCommand() != null) {
                 Double tryValue = doubleConverter(request.getCommand().trim());
                 if (tryValue != null) {
@@ -201,7 +201,7 @@ public class Utilites {
      * @param promt   Приглашение для ввода.
      * @return Введенное пользователем число типа float.
      */
-    public static float getValidFloat(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
+    public static float getValidFloat(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
         float value = 0.0f;
         boolean isValid = false;
 
@@ -212,7 +212,7 @@ public class Utilites {
             else {
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
 
 
             if (request.getCommand() != null) {
@@ -233,7 +233,7 @@ public class Utilites {
      *
      * @return Введенное пользователем число типа float, большее 1 или null если нажат Ввод.
      */
-    public static Float getValidFloatDistance(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public static Float getValidFloatDistance(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         float value = 0.0f;
         boolean isValid = false;
 
@@ -244,7 +244,7 @@ public class Utilites {
             else {
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
 
             if (request.getCommand() != null) {
                 Float tryValue = floatConverter(request.getCommand().trim());
@@ -268,7 +268,7 @@ public class Utilites {
      *
      * @return Введенное пользователем число типа float, большее -334.
      */
-    public static float getValidFloatCoordinates(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public static float getValidFloatCoordinates(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         float value = 0.0f;
         boolean isValid = false;
 
@@ -279,7 +279,7 @@ public class Utilites {
             else {
                 responseWriter.sendResponse("");
             }
-            Request request = requestReader.read();
+            Request request = (Request) requestReader.readObject();
             if (request.getCommand() != null) {
                 Float tryValue = floatConverter(request.getCommand().trim());
                 if (tryValue != null) {
@@ -299,7 +299,7 @@ public class Utilites {
      *
      * @return Объект Coordinates с введенными пользователем координатами.
      */
-    public static Coordinates getValidCoordinates(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public static Coordinates getValidCoordinates(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         double x = getValidDouble(enable_out, requestReader, responseWriter);
         float y = getValidFloatCoordinates(enable_out,requestReader, responseWriter);
         return new Coordinates(x, y);
@@ -310,7 +310,7 @@ public class Utilites {
      *
      * @return Объект Location с введенными пользователем данными.
      */
-    public static Location getValidLocation(boolean enable_out, RequestReader requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
+    public static Location getValidLocation(boolean enable_out, ObjectInputStream requestReader, ResponseWriter responseWriter, String promt) throws IOException, ClassNotFoundException {
         if (!enable_out){
 
             responseWriter.sendResponse(promt + "Введите ответ 'yes' если значение типа location не равно null: ");
@@ -320,7 +320,7 @@ public class Utilites {
         {
             responseWriter.sendResponse("");
         }
-        Request request = requestReader.read();
+        Request request = (Request) requestReader.readObject();
 
         // Если ввод пустой, возвращаем null
         if (request.getCommand() == null || !request.getCommand().equalsIgnoreCase("yes")) {

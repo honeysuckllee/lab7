@@ -62,8 +62,9 @@ public class RouteCollection {
         return minId;
     }
 
-    public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from, Location to, Float distance){
-        new Route(id, name, coordinates, creationDate, from, to, distance);
+    public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from,
+                         Location to, Float distance, int userId){
+        new Route(id, name, coordinates, creationDate, from, to, distance, userId);
     }
 
     public void removeRoute(int id) {

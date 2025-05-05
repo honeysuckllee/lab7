@@ -61,4 +61,20 @@ public class DBUsersHandler{
         return usersFromBD;
 
     }
+
+    public Integer getUserId(String username, String password) throws SQLException {
+        String query = "SELECT id, password FROM users WHERE username = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String storedHash = rs.getString("password");
+                if (PasswordUtilites.hash(password).equals(storedHash)) {
+                    return rs.getInt("id");
+                }
+            }
+        }
+        return null;
+    }
+
 }

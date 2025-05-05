@@ -117,7 +117,10 @@ public class XMLReader {
                             distance = Float.parseFloat(distanceNode.getTextContent());
                         }
                     }
-                    Route route = new Route(id, name, coordinates, creationDate, from, to, distance);
+
+                    int userId = Integer.parseInt(element.getElementsByTagName("user_id").item(0).getTextContent());
+
+                    Route route = new Route(id, name, coordinates, creationDate, from, to, distance, userId);
                     routes.add(route);
                 }
             }

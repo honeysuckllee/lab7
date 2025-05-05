@@ -4,11 +4,11 @@ import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
 import ru.lab7.Model.*;
 import ru.lab7.Requests.Request;
-import ru.lab7.Requests.RequestReader;
 import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -28,7 +28,7 @@ public class Update extends Command {
         super(routeCollection, usersHandler, routeHandler);
     }
 
-    public Response execute(Request request, RequestReader requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
+    public Response execute(Request request, ObjectInputStream requestReader, ResponseWriter responseWriter) throws IOException, ClassNotFoundException {
         // id
         id = null;
         if (!request.getArg().isEmpty()){
@@ -57,16 +57,20 @@ public class Update extends Command {
         //  distance
         this.distance = getValidFloatDistance(request.isScript(), requestReader, responseWriter);
 
+
         try {
-            routeHandler.update(new Route(id, name, coordinates, creationDate, from, to, distance));
-            collection.addRoute(id, name, coordinates, creationDate, from, to, distance);
+            int userId = usersHandler.getUserId(request.getLogin(), request.getPassword());
+            if (routeHandler.isRouteOwnedByUser(id, userId)) {
+                routeHandler.update(new Route(id, name, coordinates, creationDate, from, to, distance, userId));
+                collection.addRoute(id, name, coordinates, creationDate, from, to, distance, userId);
+            }
+            else {
+                return new Response( "Ошибка при обновлении. Элемент не принадлежит пользователю.\n", true);
+            }
         }
         catch(SQLException e){
-            return new Response( "Ошибка при обновлении\n");
+            return new Response( "Ошибка при обновлении\n", true);
         }
-
-        //deque.updateRoute(id, name, coordinates, creationDate, from, to, distance);
-
         return new Response("Маршрут обновлен" + "\n", true);
     }
 }
