@@ -62,7 +62,7 @@ public class Update extends Command {
             int userId = usersHandler.getUserId(request.getLogin(), request.getPassword());
             if (routeHandler.isRouteOwnedByUser(id, userId)) {
                 routeHandler.update(new Route(id, name, coordinates, creationDate, from, to, distance, userId));
-                collection.addRoute(id, name, coordinates, creationDate, from, to, distance, userId);
+                collection.update(id, name, coordinates, creationDate, from, to, distance, userId);
             }
             else {
                 return new Response( "Ошибка при обновлении. Элемент не принадлежит пользователю.\n", true);

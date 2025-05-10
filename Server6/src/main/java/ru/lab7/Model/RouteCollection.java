@@ -64,20 +64,34 @@ public class RouteCollection {
 
     public void addRoute(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from,
                          Location to, Float distance, int userId){
-        new Route(id, name, coordinates, creationDate, from, to, distance, userId);
+        routes.add(new Route(id, name, coordinates, creationDate, from, to, distance, userId));
     }
 
-    public void removeRoute(int id) {
-        Route toRemove = null;
+    public void update(int id, String name, Coordinates coordinates, LocalDate creationDate, Location from,
+                       Location to, Float distance, int userId) {
         synchronized(routes) {
             for(Route route : routes) {
                 if(route.getId() == id) {
-                    toRemove = route;
+                    route.setName(name);
+                    route.setCoordinates(coordinates);
+                    route.setCreationDate(creationDate);
+                    route.setFrom(from);
+                    route.setTo(to);
+                    route.setDistance(distance);
                     break;
                 }
             }
-            if(toRemove != null) {
-                 routes.remove(toRemove);
+        }
+    }
+
+
+    public void removeRoute(int id) {
+        synchronized(routes) {
+            for(Route route : routes) {
+                if(route.getId() == id) {
+                    routes.remove(route);
+                    break;
+                }
             }
         }
     }

@@ -41,7 +41,6 @@ public class Help extends Command {
         commands.put("add (element_name) ", "добавить новый элемент в коллекцию");
         commands.put("update id (element)", "обновить значение элемента коллекции по id");
         commands.put("remove_by_id id", "удалить элемент из коллекции по id");
-        commands.put("clear", "очистить коллекцию");
         commands.put("execute_script", "исполнить скрипт из файла");
         commands.put("exit", "завершить программу");
         commands.put("remove_first", "удалить первый элемент из коллекции");

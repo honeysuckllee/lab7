@@ -19,4 +19,9 @@ public class ResponseWriter {
         out.writeObject(new Response(command, isEndCommand));
         out.flush();
     }
+
+    public void sendResponse(Response response) throws IOException {
+        out.writeObject(response);
+        out.flush();
+    }
 }

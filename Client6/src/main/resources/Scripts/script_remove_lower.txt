@@ -1,4 +1,4 @@
 show
 remove_lower
-3
+24
 show

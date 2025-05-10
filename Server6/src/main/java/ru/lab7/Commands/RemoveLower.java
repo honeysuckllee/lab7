@@ -17,7 +17,6 @@ import static ru.lab7.Service.Utilites.getValidInt;
 import static ru.lab7.Service.Utilites.integerConverter;
 
 public class RemoveLower extends Command {
-    private Deque deque;
     private Integer id;
 
     public RemoveLower(RouteCollection routeCollection, DBUsersHandler usersHandler, DBRouteHandler routeHandler) {

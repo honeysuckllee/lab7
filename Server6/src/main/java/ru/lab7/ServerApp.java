@@ -63,7 +63,6 @@ public class ServerApp {
         commandHashMap.put("remove_lower", new RemoveLower(routeCollection, usersHandler, routeHandler));
         commandHashMap.put("remove_by_id", new RemoveById(routeCollection, usersHandler, routeHandler));
         commandHashMap.put("add_if_max", new AddIfMax(routeCollection, usersHandler, routeHandler));
-        commandHashMap.put("clear", new Clear(routeCollection, usersHandler, routeHandler));
         commandHashMap.put("filter_starts_with_name", new FilterStartsWithName(routeCollection, usersHandler, routeHandler));
         commandHashMap.put("print_unique_distance", new PrintUniqueDistance(routeCollection, usersHandler, routeHandler));
         commandHashMap.put("print_field_descending_distance", new PrintFieldDescendingDistance(routeCollection, usersHandler, routeHandler));

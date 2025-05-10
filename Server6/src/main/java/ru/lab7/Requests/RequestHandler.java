@@ -4,6 +4,7 @@ import ru.lab7.DataBase.DBRouteHandler;
 import ru.lab7.DataBase.DBUsersHandler;
 import ru.lab7.Model.RouteCollection;
 import ru.lab7.Commands.Command;
+import ru.lab7.Response;
 import ru.lab7.ResponseWriter;
 import ru.lab7.ServerApp;
 
@@ -90,14 +91,6 @@ public class RequestHandler {
 
             }
 
-            //additionalInputForCommand = new CommandRegistry().getCommandsWithInputRequirement();
-            //responseWriter.sendResponse(additionalInputForCommand);
-
-            //DataFactory enumFactory = new EnumDataFactory();
-            //responseWriter.sendResponse(enumFactory.createData());
-
-
-
             while (true) {
                     // Выполняем команду
                     try {
@@ -107,11 +100,11 @@ public class RequestHandler {
                             responseWriter.sendResponse("Команда не найдена", true);
                         }
                         else {
-                            String responseStr = commandHashMap.get(command.getCommand()).execute(command,
-                                                                    in, responseWriter).getResponseInfo();
+                            Response response = commandHashMap.get(command.getCommand()).execute(command,
+                                                                    in, responseWriter);
 
                             try {
-                                responseWriter.sendResponse(responseStr);
+                                responseWriter.sendResponse(response);
                             } catch (IOException e) {
                                 System.out.println("Клиент отключился.");
                                 break;

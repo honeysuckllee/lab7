@@ -73,7 +73,6 @@ public class AddIfMax extends Command {
             id = getValidInt(request.isScript(), requestReader, responseWriter, "Введите id : ");
         }
 
-        if (id > collection.getMaxId()) {
             //  name
             this.name = getValidName(request.isScript(), requestReader, responseWriter);
 
@@ -93,6 +92,9 @@ public class AddIfMax extends Command {
             //  distance
             this.distance = getValidFloatDistance(request.isScript(), requestReader, responseWriter);
 
+
+        if (id > collection.getMaxId())
+        {
             try {
                 int userId = usersHandler.getUserId(request.getLogin(), request.getPassword());
                 routeHandler.add(new Route(id, name, coordinates, creationDate, from, to, distance, userId));

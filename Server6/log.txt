@@ -2,9 +2,9 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2025-05-05T16:01:49.392258800Z</date>
-  <millis>1746460909392</millis>
-  <nanos>258800</nanos>
+  <date>2025-05-10T20:34:33.485379600Z</date>
+  <millis>1746909273485</millis>
+  <nanos>379600</nanos>
   <sequence>0</sequence>
   <logger>Server</logger>
   <level>INFO</level>
@@ -12,16 +12,4 @@
   <method>run</method>
   <thread>1</thread>
   <message>Сервер начал работу.</message>
-</record>
-<record>
-  <date>2025-05-05T16:02:03.690111600Z</date>
-  <millis>1746460923690</millis>
-  <nanos>111600</nanos>
-  <sequence>1</sequence>
-  <logger>Server</logger>
-  <level>INFO</level>
-  <class>ru.lab7.ServerApp</class>
-  <method>run</method>
-  <thread>1</thread>
-  <message>Подключился новый клиент: /127.0.0.1:63276</message>
 </record>
